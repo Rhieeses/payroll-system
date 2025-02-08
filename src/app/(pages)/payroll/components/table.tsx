@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { Loader } from 'lucide-react';
 import {
 	ColumnDef,
 	ColumnFiltersState,
@@ -29,15 +30,16 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { Modal } from './modal';
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
+	loading: boolean;
 }
 
 export function DataTable<TData extends { employee_name: string }, TValue>({
 	columns,
 	data,
+	loading,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -82,13 +84,6 @@ export function DataTable<TData extends { employee_name: string }, TValue>({
 				/>
 
 				<div className='space-x-2'>
-					<Modal>
-						<Button
-							disabled={table.getFilteredSelectedRowModel().rows.length === 0}
-							onClick={handleSelectedRow}>
-							Set Status
-						</Button>
-					</Modal>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button
@@ -163,7 +158,13 @@ export function DataTable<TData extends { employee_name: string }, TValue>({
 								<TableCell
 									colSpan={columns.length}
 									className='h-24 text-center'>
-									No results.
+									{loading ? (
+										<div className='flex items-center justify-center gap-2 w-full'>
+											<Loader className='animate-spin' /> <span>Loading</span>
+										</div>
+									) : (
+										'No results.'
+									)}
 								</TableCell>
 							</TableRow>
 						)}

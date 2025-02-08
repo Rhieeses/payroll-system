@@ -2,12 +2,11 @@
 
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -17,8 +16,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { Loader } from 'lucide-react';
 
 const loginSchema = z.object({
 	username: z.string(),
@@ -28,7 +28,7 @@ const loginSchema = z.object({
 export default function Login() {
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
-	const [message, setMessage] = useState('');
+	const [error, setError] = useState('');
 
 	const loginForm = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
@@ -41,10 +41,8 @@ export default function Login() {
 	const onLogin = async (values: z.infer<typeof loginSchema>) => {
 		setLoading(true);
 		try {
-			const response = await axios.post('/api/login', values);
-			//console.log('Response status:', response.status);
+			const response = await axios.post('/api/auth/login', values);
 			if (response.status === 200) {
-				setMessage('Login Successful!');
 				router.push('/dashboard');
 				setLoading(false);
 			}
@@ -54,7 +52,7 @@ export default function Login() {
 			});
 		} catch (error) {
 			setLoading(false);
-			setMessage('Username or password is incorrect!');
+			setError('Username or password is incorrect!');
 			loginForm.reset({
 				...loginForm.getValues(),
 				password: '',
@@ -167,9 +165,15 @@ export default function Login() {
 								type='submit'
 								disabled={loading}
 								className='p-8 rounded-full w-full'>
-								Sign in
+								{loading && (
+									<Loader
+										className='animate-spin'
+										style={{ width: '1.5rem', height: '2rem' }}
+									/>
+								)}
+								{loading ? 'Loading' : 'Sign in'}
 							</Button>
-							<p className='text-center text-red-600 text-smin '>{message}</p>
+							<p className='text-center text-red-600 text-smin '>{error}</p>
 						</form>
 					</Form>
 

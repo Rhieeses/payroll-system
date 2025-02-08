@@ -1,8 +1,9 @@
 import Layout from '@/components/custom-ui/layout';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import DepartmentList from '../../../components/utils/departmentList';
-import Link from 'next/link';
+import DepartmentList from './components/departmentList';
+import { Suspense } from 'react';
 
 export default function Departments() {
 	return (
@@ -23,8 +24,9 @@ export default function Departments() {
 						</Button>
 					</Link>
 				</section>
-
-				<DepartmentList />
+				<Suspense fallback={<p>Loading...</p>}>
+					<DepartmentList />
+				</Suspense>
 			</>
 		</Layout>
 	);

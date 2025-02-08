@@ -10,7 +10,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Chart } from '@/components/utils/chart';
+import { Chart } from '@/components/custom-ui/chart';
 
 export default function Dashboard() {
 	return (

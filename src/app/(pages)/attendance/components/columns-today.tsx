@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AttendanceSchema } from './columns';
 import { TimeToday } from '@/components/utils/functions/time';
@@ -38,6 +38,9 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 			timeOut: TimeProps;
 		};
 	}>({});
+	const { toast } = useToast();
+
+	const [loading, setLoading] = useState(false);
 
 	const handleStatusChange = (rowId: string, status: string) => {
 		setRowData((prev) => ({
@@ -69,9 +72,6 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 		}));
 	};
 
-	const { toast } = useToast();
-	const [loading, setLoading] = useState(false);
-
 	const formEdit = async (rowId: string, attendanceId: string) => {
 		setLoading(true);
 
@@ -84,8 +84,6 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 		const timeOutRow = rowData?.[rowId]?.timeOut || null;
 		const statusRow = rowData?.[rowId]?.status || 'absent';
 		let timeInUTC, timeOutUTC;
-
-		console.log(rowData?.[rowId]?.status);
 
 		if (timeInRow) {
 			timeInUTC = new Date(
@@ -123,7 +121,7 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 		try {
 			console.log(timeInUTC, timeOutUTC);
 			const response = await axios.patch(
-				'/api/attendance-edit',
+				'/api/attendance/update-attendance',
 				{
 					attendanceId,
 					timeInUTC,
@@ -141,8 +139,8 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 		} catch (error: any) {
 			console.error('An error occurred:', error.message || error);
 		} finally {
-			refetch();
 			setLoading(false);
+			refetch();
 		}
 	};
 
@@ -191,7 +189,7 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 		}
 
 		try {
-			const response = await axios.post('/api/employee-attendance', {
+			const response = await axios.post('/api/attendance/add-attendance', {
 				rowId,
 				timeInUTC,
 				timeOutUTC,
@@ -210,6 +208,7 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 			setLoading(false);
 		}
 	};
+
 	return [
 		{
 			id: 'select',
@@ -292,6 +291,8 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 				const currentTimeOut: any = rowData[id]?.timeOut || parseTimeOrNull(time_out);
 				const currentStatus: any = rowData[id]?.status || status;
 				const statusFilter = ['present', 'late'];
+
+				//onChange={(value) => handleTimeIn(id, value)}
 
 				return (
 					<div className='flex justify-between items-center justify-start'>
@@ -440,16 +441,30 @@ export const columnsToday = (refetch: () => void): ColumnDef<AttendanceSchema>[]
 					<div>
 						{attendance_id ? (
 							<Button
-								className='p-5'
+								className='p-5 w-full'
 								disabled={disableButton}
 								onClick={() => formEdit(id, attendance_id)}>
-								Edit Attendance
+								{loading ? (
+									<>
+										<Loader className='animate-spin' />
+										<span>Loading</span>
+									</>
+								) : (
+									'Edit Attendance'
+								)}
 							</Button>
 						) : (
 							<Button
-								className='p-5'
+								className='p-5  w-full'
+								disabled={loading}
 								onClick={() => formSubmit(id)}>
-								Insert Attendance
+								{loading ? (
+									<>
+										<Loader className='animate-spin' /> Loading{' '}
+									</>
+								) : (
+									'Insert Attendance'
+								)}
 							</Button>
 						)}
 					</div>

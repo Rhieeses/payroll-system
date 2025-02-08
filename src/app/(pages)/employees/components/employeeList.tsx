@@ -1,5 +1,5 @@
 import { EmployeeCard } from './employeeCard';
-import { fetchEmployeeData } from './serverProps/employeeListProps';
+import { fetchEmployeeData } from './employeeListProps';
 
 export default async function EmployeeList() {
 	const employeeData = await fetchEmployeeData();

@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { cookies } from 'next/headers';
 
-interface departmentSchema {
+type departmentSchema = {
 	id: number;
 	name: string;
 	description: string;
 	deparment_head: string;
 	department_photo: string;
-}
+};
 
 const fetchDepartments = async (): Promise<departmentSchema[]> => {
 	const cookieStore = await cookies();
@@ -18,7 +18,7 @@ const fetchDepartments = async (): Promise<departmentSchema[]> => {
 	}
 
 	try {
-		const response = await axios.get(`${process.env.PORT_URL}/api/department-list`, {
+		const response = await axios.get(`${process.env.PORT_URL}/api/department/department-list`, {
 			headers: {
 				Authorization: `Bearer ${token.value}`,
 			},

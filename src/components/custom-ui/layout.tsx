@@ -39,7 +39,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/dashboard'
 								className={`p-[0.5rem] rounded-lg ${
 									pathname === '/dashboard'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -52,7 +52,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/departments'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/departments'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -66,7 +66,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/employees' ||
 									pathname === '/employees/add-employee'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -79,7 +79,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/attendance'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/attendance'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -92,7 +92,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/payroll'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/payroll'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -112,7 +112,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/performance'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/performance'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -125,7 +125,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/invoices'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/invoices'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -138,7 +138,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/calendar'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/calendar'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -150,7 +150,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/settings'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/settings'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>
@@ -162,7 +162,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								href='/help'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/help'
-										? 'bg-slate-300 text-slate-900'
+										? 'bg-black/10 text-slate-900'
 										: 'cursor-pointer hover:bg-gray-200 duration-200'
 								}`}>
 								<li className='flex gap-2 w-full'>

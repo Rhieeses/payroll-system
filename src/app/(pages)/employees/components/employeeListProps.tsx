@@ -11,7 +11,7 @@ export const fetchEmployeeData = async (): Promise<EmployeeSchema[]> => {
 	}
 
 	try {
-		const response = await axios.get(`${process.env.PORT_URL}/api/employee-list`, {
+		const response = await axios.get(`${process.env.PORT_URL}/api/employee/employee-list`, {
 			headers: {
 				Authorization: `Bearer ${token.value}`,
 			},

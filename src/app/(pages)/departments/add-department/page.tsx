@@ -106,7 +106,7 @@ export default function AddDepartment() {
 				addDepartmentForm.setValue('departmentPhoto', uploadResponse.data.filePath);
 
 				const formValues = addDepartmentForm.getValues();
-				const response = await axios.post('/api/add-department', formValues);
+				const response = await axios.post('/api/department/add-department', formValues);
 				const name = addDepartmentForm.getValues('name');
 
 				if (response.status === 200) {

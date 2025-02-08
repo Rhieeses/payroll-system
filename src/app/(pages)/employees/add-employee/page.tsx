@@ -3,8 +3,7 @@ import { z } from 'zod';
 import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '@/components/custom-ui/layout';
 import {
 	Form,
@@ -25,8 +24,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { formatSalary, cleanInput } from '@/components/utils/functions/formatter';
+import { getDepartmentList } from './actions/get-department-list';
+import BackButton from '@/components/custom-ui/back-button';
 
-const addEmployeeSchema = z.object({
+const EmployeeSchema = z.object({
 	firstName: z.string(),
 	middleName: z.string().optional(),
 	lastName: z.string(),
@@ -43,20 +44,42 @@ const addEmployeeSchema = z.object({
 });
 
 export default function AddEmployee() {
-	const router = useRouter();
 	const { toast } = useToast();
 	const [preview, setPreview] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
-	const [message, setMessage] = useState('');
 	const [salary, setSalary] = useState('');
-	//
-
 	const [department, setDepartment] = useState<any[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const [hasFetched, setHasFetched] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
-	const addEmployeeForm = useForm<z.infer<typeof addEmployeeSchema>>({
-		resolver: zodResolver(addEmployeeSchema),
+	useEffect(() => {
+		const fetchDepartments = async () => {
+			const { department } = await getDepartmentList();
+			setDepartment(department);
+			setIsLoading(false);
+		};
+
+		fetchDepartments();
+	}, []);
+
+	const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const rawValue = e.target.value;
+		const formattedValue = formatSalary(rawValue);
+		setSalary(formattedValue);
+	};
+
+	const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			setPreview(URL.createObjectURL(file));
+			addEmployeeForm.setValue('employeePhoto', file);
+		} else {
+			setPreview(null);
+			addEmployeeForm.setValue('employeePhoto', null);
+		}
+	};
+
+	const addEmployeeForm = useForm<z.infer<typeof EmployeeSchema>>({
+		resolver: zodResolver(EmployeeSchema),
 		defaultValues: {
 			firstName: '',
 			middleName: '',
@@ -71,42 +94,7 @@ export default function AddEmployee() {
 		},
 	});
 
-	const handleSalaryChange = (e: any) => {
-		const rawValue = e.target.value;
-		const formattedValue = formatSalary(rawValue);
-		setSalary(formattedValue);
-	};
-
-	const fetchDepartmentChoice = async () => {
-		if (hasFetched) return; // Prevent refetching if already fetched once
-		setIsLoading(true);
-		try {
-			const response = await axios.get('/api/department-choices', { withCredentials: true });
-			setDepartment(response.data);
-			setHasFetched(true);
-		} catch (error) {
-			console.error('Error fetching choices:', error);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	const handleFocus = () => {
-		fetchDepartmentChoice();
-	};
-
-	const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0]; // Access the first file
-		if (file) {
-			setPreview(URL.createObjectURL(file)); // Generate preview URL
-			addEmployeeForm.setValue('employeePhoto', file); // Update form value
-		} else {
-			setPreview(null);
-			addEmployeeForm.setValue('employeePhoto', null); // Clear form value
-		}
-	};
-
-	const onSubmit = async (values: z.infer<typeof addEmployeeSchema>) => {
+	const onSubmit = async () => {
 		setLoading(true);
 		try {
 			const employeePhoto = addEmployeeForm.getValues('employeePhoto');
@@ -126,14 +114,13 @@ export default function AddEmployee() {
 				addEmployeeForm.setValue('salary', cleanInput(salary));
 
 				const formValues = addEmployeeForm.getValues();
-				const response = await axios.post('/api/add-employee', formValues);
+				const response = await axios.post('/api/employee/add-employee', formValues);
 
 				const name = `${addEmployeeForm.getValues('firstName')} ${addEmployeeForm.getValues(
 					'lastName',
 				)} `;
 
 				if (response.status === 200) {
-					setMessage('Employee added!');
 					toast({
 						title: 'New Employee Added!',
 						description: `${name}`,
@@ -145,7 +132,10 @@ export default function AddEmployee() {
 			}
 		} catch (error: any) {
 			console.error('An error occurred:', error.message || error);
-			setMessage('Failed to add employee. Please try again.');
+			toast({
+				title: 'Failed to add an employee',
+				description: `${error.message}`,
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -154,13 +144,7 @@ export default function AddEmployee() {
 	return (
 		<Layout>
 			<>
-				<div className='header flex items-center gap-2 p-3'>
-					<i
-						className='bx bx-arrow-back bx-sm cursor-pointer hover:text-gray-300'
-						onClick={() => router.back()}
-					/>
-					<p>Add Employee</p>
-				</div>
+				<BackButton>Back to Employees</BackButton>
 
 				<div className='p-10 pt-5'>
 					<h1 className='mb-[2rem]'>Employee Details</h1>
@@ -286,7 +270,6 @@ export default function AddEmployee() {
 										<FormItem>
 											<FormLabel>Department</FormLabel>
 											<Select
-												onOpenChange={handleFocus}
 												onValueChange={field.onChange}
 												defaultValue={field.name}>
 												<FormControl>
@@ -350,8 +333,8 @@ export default function AddEmployee() {
 												<Input
 													required
 													{...field}
-													value={salary} // Display the formatted salary
-													onChange={handleSalaryChange} // Update the salary value on change
+													value={salary}
+													onChange={handleSalaryChange}
 													placeholder='Salary'
 												/>
 											</FormControl>

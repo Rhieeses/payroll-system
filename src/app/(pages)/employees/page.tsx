@@ -1,7 +1,7 @@
 import Layout from '@/components/custom-ui/layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import EmployeeList from '../../../components/utils/employeeList';
+import EmployeeList from './components/employeeList';
 import Link from 'next/link';
 
 export default function Employees() {

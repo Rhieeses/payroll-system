@@ -1,6 +1,12 @@
 const express = require('express');
 const next = require('next');
-const apiRoutes = require('./routes/api.js');
+const imageUpload = require('./routes/image-upload.js');
+const attendanceRoute = require('./routes/attendance-route.js');
+const employeeRoute = require('./routes/employee-route.js');
+const departmentRoute = require('./routes/department-route.js');
+const payrollRoute = require('./routes/payroll-route.js');
+const authRoute = require('./routes/auth-route.js');
+
 const path = require('path');
 const cors = require('cors'); // Require CORS
 const session = require('express-session');
@@ -17,6 +23,7 @@ dotenv.config();
 app.prepare().then(() => {
 	const server = express();
 	const uploadsDir = path.join(__dirname, '../uploads');
+	server.use(cookieParser());
 
 	// Use CORS middleware to enable CORS
 	server.use(
@@ -39,12 +46,26 @@ app.prepare().then(() => {
 	);
 
 	// Use cookie-parser middleware
-	server.use(cookieParser());
 
 	// 	 to parse JSON bodies
 	server.use(express.json());
 	// Serve API routes from the routes file
-	server.use('/api', apiRoutes);
+	server.use('/api', imageUpload);
+
+	//auth route
+	server.use('/api/auth', authRoute);
+
+	//attendance route
+	server.use('/api/attendance', attendanceRoute);
+
+	//employee route
+	server.use('/api/employee', employeeRoute);
+
+	//employee route
+	server.use('/api/payroll', payrollRoute);
+
+	//employee route
+	server.use('/api/department', departmentRoute);
 
 	server.use('/uploads', express.static(uploadsDir));
 

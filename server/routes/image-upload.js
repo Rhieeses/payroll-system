@@ -1,21 +1,9 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const bcrypt = require('bcrypt');
-const connection = require('../config/db');
-const jwt = require('jsonwebtoken');
-const dbInsert = require('../model/INSERT/dbInsert');
-const dbSelect = require('../model/SELECT/dbSelect');
-const dbUpdate = require('../model/UPDATE/dbUpdate');
 
 const multer = require('multer');
 const path = require('path');
 
-dotenv.config();
 const router = express();
-const JWT_SECRET = process.env.JWT_SECRET;
-
-const { verifyToken } = require('../config/auth');
-const cookieParser = require('cookie-parser');
 
 let storagePhoto = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -30,8 +18,6 @@ let storagePhoto = multer.diskStorage({
 const uploadPhoto = multer({
 	storage: storagePhoto,
 }).single('file');
-
-router.use(cookieParser());
 
 router.post('/upload-photo', (req, res) => {
 	uploadPhoto(req, res, function (err) {
@@ -50,6 +36,7 @@ router.post('/upload-photo', (req, res) => {
 	});
 });
 
+/** 
 router.post('/login', async (req, res) => {
 	const { username, password } = req.body;
 
@@ -90,7 +77,9 @@ router.post('/login', async (req, res) => {
 		res.status(500).json({ message: 'Server error' });
 	}
 });
+*/
 
+/** 
 router.post('/add-employee', async (req, res) => {
 	try {
 		const employeeForm = req.body;
@@ -102,28 +91,9 @@ router.post('/add-employee', async (req, res) => {
 	}
 });
 
-router.post('/employee-attendance', async (req, res) => {
-	try {
-		const employeeAttendanceForm = req.body;
-		await dbInsert.addEmployeeAttendance(employeeAttendanceForm);
-		res.status(200).json({ message: 'Employee attendance added.' });
-	} catch (error) {
-		console.error('Error adding employee:', error);
-		res.status(500).json({ message: 'Error adding employee attendance', error: error.message });
-	}
-});
 
-router.post('/add-department', async (req, res) => {
-	try {
-		const departmentForm = req.body;
-		await dbInsert.addDepartment(departmentForm);
-		res.status(200).json({ message: 'New department added.' });
-	} catch (error) {
-		console.error('Error adding department:', error);
-		res.status(500).json({ message: 'Error adding department', error: error.message });
-	}
-});
 
+//
 router.get('/employee-list', async (req, res) => {
 	const token = req.headers.authorization.split(' ')[1];
 	if (!token) {
@@ -139,6 +109,8 @@ router.get('/employee-list', async (req, res) => {
 	}
 });
 
+
+//
 router.get('/employee-details/:id', async (req, res) => {
 	const token = req.cookies.token;
 	const { id } = req.params;
@@ -153,38 +125,6 @@ router.get('/employee-details/:id', async (req, res) => {
 		res.json(employeeDetails);
 	} catch (error) {
 		res.status(500).json({ error: 'Error fetching employee details' });
-	}
-});
-router.get('/attendance-daily', async (req, res) => {
-	const token = req.cookies.token;
-
-	if (!token) {
-		return res.status(401).json({ message: 'Unauthorized, You must login first!' });
-	}
-
-	try {
-		verifyToken(token, ['Admin', 'User']);
-		const attendanceDaily = await dbSelect.fetchAttendanceDaily();
-		res.json(attendanceDaily);
-	} catch (error) {
-		console.error('Error fetching attendance data:', error);
-		res.status(500).json({ error: 'Error fetching attendance data' });
-	}
-});
-
-router.get('/attendance-weekly', async (req, res) => {
-	const token = req.cookies.token;
-
-	if (!token) {
-		return res.status(401).json({ message: 'Unauthorized, You must login first!' });
-	}
-
-	try {
-		verifyToken(token, ['Admin', 'User']);
-		const attendanceWeekly = await dbSelect.fetchAttendanceWeekly();
-		res.json(attendanceWeekly);
-	} catch (error) {
-		res.status(500).json({ error: 'Error fetching Attendance weekly' });
 	}
 });
 
@@ -204,21 +144,7 @@ router.get('/department-list', async (req, res) => {
 });
 
 //list select
-router.get('/department-choices', async (req, res) => {
-	const token = req.cookies.token;
 
-	if (!token) {
-		return res.status(401).json({ message: 'Unauthorized, You must login first!' });
-	}
-
-	try {
-		verifyToken(token, ['Admin', 'User']);
-		const departmentList = await dbSelect.fetchDepartmentList();
-		res.json(departmentList);
-	} catch (error) {
-		res.status(500).json({ error: 'Error fetching Departments' });
-	}
-});
 
 router.get('/employee-choices', async (req, res) => {
 	const token = req.cookies.token;
@@ -235,7 +161,37 @@ router.get('/employee-choices', async (req, res) => {
 		res.status(500).json({ error: 'Error fetching employee list' });
 	}
 });
+*/
 
+/** 
+router.get('/department-choices', async (req, res) => {
+	const token = req.cookies.token;
+
+	if (!token) {
+		return res.status(401).json({ message: 'Unauthorized, You must login first!' });
+	}
+
+	try {
+		verifyToken(token, ['Admin', 'User']);
+		const departmentList = await dbSelect.fetchDepartmentList();
+		res.json(departmentList);
+	} catch (error) {
+		res.status(500).json({ error: 'Error fetching Departments' });
+	}
+});
+
+router.post('/add-department', async (req, res) => {
+	try {
+		const departmentForm = req.body;
+		await dbInsert.addDepartment(departmentForm);
+		res.status(200).json({ message: 'New department added.' });
+	} catch (error) {
+		console.error('Error adding department:', error);
+		res.status(500).json({ message: 'Error adding department', error: error.message });
+	}
+});*/
+
+/** 
 router.get('/payroll', async (req, res) => {
 	const token = req.cookies.token;
 	if (!token) {
@@ -249,7 +205,58 @@ router.get('/payroll', async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: 'Error fetching payroll list' });
 	}
+});*/
+
+/**
+ *
+router.post('/employee-attendance', async (req, res) => {
+	try {
+		const employeeAttendanceForm = req.body;
+		await dbInsert.addEmployeeAttendance(employeeAttendanceForm);
+		res.status(200).json({ message: 'Employee attendance added.' });
+	} catch (error) {
+		console.error('Error adding employee:', error);
+		res.status(500).json({ message: 'Error adding employee attendance', error: error.message });
+	}
 });
+
+ router.get('/attendance-daily', async (req, res) => {
+	const token = req.cookies.token;
+
+	if (!token) {
+		return res.status(401).json({ message: 'Unauthorized, You must login first!' });
+	}
+
+	try {
+		verifyToken(token, ['Admin', 'User']);
+		const attendanceDaily = await dbSelect.fetchAttendanceDaily();
+		res.json(attendanceDaily);
+	} catch (error) {
+		console.error('Error fetching attendance data:', error);
+		res.status(500).json({ error: 'Error fetching attendance data' });
+	}
+});
+ 
+
+router.get('/attendance-weekly', async (req, res) => {
+	const token = req.cookies.token;
+
+	if (!token) {
+		return res.status(401).json({ message: 'Unauthorized, You must login first!' });
+	}
+
+	try {
+		verifyToken(token, ['Admin', 'User']);
+		const attendanceWeekly = await dbSelect.fetchAttendanceWeekly();
+		res.json(attendanceWeekly);
+	} catch (error) {
+		res.status(500).json({ error: 'Error fetching Attendance weekly' });
+	}
+});
+
+
+
+
 router.patch('/attendance-edit', async (req, res) => {
 	const token = req.cookies.token;
 
@@ -269,5 +276,6 @@ router.patch('/attendance-edit', async (req, res) => {
 		});
 	}
 });
+*/
 
 module.exports = router;

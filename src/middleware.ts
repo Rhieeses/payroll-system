@@ -7,6 +7,11 @@ export async function middleware(req: NextRequest) {
 	let token = req.cookies.get('token')?.value;
 	const { pathname } = req.nextUrl;
 
+	if ((pathname === '/login' || pathname === '/') && token) {
+		const dashboardUrl = `${req.nextUrl.origin}/dashboard`;
+		return NextResponse.redirect(dashboardUrl);
+	}
+
 	if (pathname === '/login' || pathname === '/') {
 		return NextResponse.next();
 	}
@@ -15,18 +20,6 @@ export async function middleware(req: NextRequest) {
 		const loginUrl = `${req.nextUrl.origin}/login`;
 		return NextResponse.redirect(loginUrl);
 	}
-
-	/**
-	if (pathname === '/login' && token) {
-		try {
-			const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET));
-			return NextResponse.redirect(new URL('/dashboard', req.url));
-		} catch (err) {
-			console.error('Invalid token on /login:', err);
-			// If token is invalid, allow access to /login
-			return NextResponse.next();
-		}
-	} */
 
 	try {
 		const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET));
@@ -68,11 +61,12 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
 	matcher: [
+		'/',
+		'/login',
 		'/dashboard',
 		'/departments',
 		'/employees',
 		'/employees/:path*',
-		'/login',
 		'/attendance',
 		'/payroll',
 	],
