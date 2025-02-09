@@ -65,12 +65,6 @@ export function DataTable<TData extends { employee_name: string }, TValue>({
 		},
 	});
 
-	const handleSelectedRow = () => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		const selectedIds = selectedRows.map((row) => row.original.employee_name);
-		console.log('Selected IDs:', selectedIds);
-	};
-
 	return (
 		<div className='w-full'>
 			<div className='flex justify-between items-center py-4'>
@@ -172,10 +166,6 @@ export function DataTable<TData extends { employee_name: string }, TValue>({
 				</Table>
 			</div>
 			<div className='flex items-center justify-end space-x-2 py-4'>
-				<div className='flex-1 text-sm text-muted-foreground'>
-					{table.getFilteredSelectedRowModel().rows.length} of{' '}
-					{table.getFilteredRowModel().rows.length} row(s) selected.
-				</div>
 				<div className='space-x-2'>
 					<Button
 						variant='outline'

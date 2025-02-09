@@ -1,6 +1,5 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
-import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AttendanceSchema } from '../../attendance/components/columns';
@@ -8,29 +7,24 @@ import { formatNumber } from '@/components/utils/functions/formatter';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 
-export const columns = (refetch: () => void): ColumnDef<AttendanceSchema>[] => {
+export const columns = (
+	setSelectedRow: (employeeRowData: any) => void,
+): ColumnDef<AttendanceSchema>[] => {
 	return [
 		{
-			id: 'select',
-			header: ({ table }) => (
-				<Checkbox
-					checked={
-						table.getIsAllPageRowsSelected() ||
-						(table.getIsSomePageRowsSelected() && 'indeterminate')
-					}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label='Select all'
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label='Select row'
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
+			accessorKey: 'id',
+			header: ({ column }) => {
+				return (
+					<Button
+						className='p-0'
+						variant='ghost'
+						onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+						ID
+						<ArrowUpDown />
+					</Button>
+				);
+			},
+			cell: ({ row }) => <div>{row.getValue('id')}</div>,
 		},
 
 		{
@@ -148,7 +142,7 @@ export const columns = (refetch: () => void): ColumnDef<AttendanceSchema>[] => {
 			cell: ({ row }: any) => {
 				return (
 					<div className='flex items-center justify-center gap-2'>
-						<Button>Pay Employee</Button>
+						<Button onClick={() => setSelectedRow(row.original)}>Pay</Button>
 					</div>
 				);
 			},
