@@ -142,7 +142,7 @@ export const columns = (
 			cell: ({ row }: any) => {
 				return (
 					<div className='flex items-center justify-center gap-2'>
-						<Button onClick={() => setSelectedRow(row.original)}>Pay</Button>
+						<Button onClick={() => setSelectedRow(row.original)}>Payslip</Button>
 					</div>
 				);
 			},

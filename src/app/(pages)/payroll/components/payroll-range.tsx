@@ -28,7 +28,7 @@ const getPayrollRange = (payrollRange: number) => {
 	}
 
 	if (payrollRange !== 0) {
-		let monthsToSubtract = Math.floor(payrollRange / 2);
+		let monthsToSubtract = Math.ceil(payrollRange / 2);
 		startDayPayroll.setMonth(startDayPayroll.getMonth() - monthsToSubtract);
 		endDayPayroll.setMonth(endDayPayroll.getMonth() - monthsToSubtract);
 

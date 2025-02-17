@@ -47,7 +47,7 @@ async function fetchEmployees() {
 }
 
 async function fetchEmployeeDetails(id) {
-	const fetchQuery = `SELECT 
+	const fetchDetails = `SELECT 
 				id,
 				first_name || ' ' || middle_name || ' ' || last_name AS full_name,
 				email,
@@ -59,9 +59,22 @@ async function fetchEmployeeDetails(id) {
 				created_at,
 				salary
 				FROM employee WHERE id = $1;`;
+
+	const fetchPayroll = `SELECT id, total_hours, total_overtime, total_salary, payroll_date, status FROM payroll WHERE emp_id = $1`;
+	const fetchAttendance = `SELECT id, time_in, time_out, total_hours, overtime, status, created_at FROM attendance  WHERE emp_id = $1`;
+
 	try {
-		const result = await connection.query(fetchQuery, [id]);
-		return result.rows;
+		const [details, payroll, attendance] = await Promise.all([
+			await connection.query(fetchDetails, [id]),
+			await connection.query(fetchPayroll, [id]),
+			await connection.query(fetchAttendance, [id]),
+		]);
+
+		return {
+			empDetails: details.rows[0],
+			payroll: payroll.rows,
+			attendance: attendance.rows,
+		};
 	} catch (error) {
 		throw new Error('Failed to fetch employee details.');
 	}
@@ -76,4 +89,27 @@ async function fetchEmployeeList(id) {
 		throw new Error('Failed to fetch employee list.');
 	}
 }
-module.exports = { AddEmployee, fetchEmployees, fetchEmployeeDetails, fetchEmployeeList };
+
+async function terminateEmployee(id) {
+	const deleteQuery = `DELETE FROM employee WHERE id = $1`;
+	try {
+		const result = await connection.query(deleteQuery, [id]);
+
+		if (result.rowCount > 0) {
+			return { success: true, message: 'Employee terminated successfully.' };
+		} else {
+			return { success: false, message: 'No employee found with the given ID.' };
+		}
+	} catch (error) {
+		console.error('Error deleting employee:', error);
+		throw new Error('Failed to terminate employee.');
+	}
+}
+
+module.exports = {
+	AddEmployee,
+	fetchEmployees,
+	fetchEmployeeDetails,
+	fetchEmployeeList,
+	terminateEmployee,
+};

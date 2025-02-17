@@ -41,3 +41,18 @@ export const formatDate = (dateString: string) => {
 	const year = date.getFullYear();
 	return `${month} ${day}, ${year}`;
 };
+
+export const formatDateToTime = (dateString: string): string => {
+	const date = new Date(dateString);
+
+	const options: Intl.DateTimeFormatOptions = {
+		hour: '2-digit',
+		minute: '2-digit',
+		hour12: true,
+	};
+
+	// Format the time
+	const time = date.toLocaleString('en-SG', options); // Example: "8:00 AM"
+
+	return time;
+};

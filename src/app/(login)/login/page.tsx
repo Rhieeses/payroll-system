@@ -61,8 +61,8 @@ export default function Login() {
 	};
 
 	return (
-		<div className='grid grid-cols-2 w-screen h-screen flex items-center'>
-			<div className='flex items-center justify-center h-full bg-black'>
+		<div className='grid grid-cols-2 w-screen h-screen  items-center'>
+			<div className='lg:flex items-center justify-center h-full bg-black hidden '>
 				<div className='flex flex-col gap-5 justify-start items-start w-full h-2/3 p-[10rem] pl-[3rem] text-white'>
 					<h1 className='text-5xl'>Welcome to Your Payroll Powerhouse!</h1>
 					<p>
@@ -78,8 +78,8 @@ export default function Login() {
 				</div>
 			</div>
 
-			<main className='w-full h-full flex flex-col items-center justify-center'>
-				<div className='flex flex-col gap-5 w-1/2'>
+			<main className='w-full h-full flex flex-col items-center justify-center lg:col-span-1 col-span-2 lg:p-0 p-5'>
+				<div className='flex flex-col gap-5 lg:w-1/2 w-full'>
 					<span className='flex flex-col gap-2 text-center'>
 						<h1 className='text-3xl'>Sign In</h1>
 						<p className='label'>Welcome! Please enter your username and password.</p>

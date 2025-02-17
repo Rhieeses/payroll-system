@@ -2,8 +2,8 @@
 
 import Layout from '@/components/custom-ui/layout';
 import { useState, useMemo } from 'react';
-import { usePayroll } from '../attendance/hooks/attendance-hooks';
-import { DataTable } from './components/table';
+import { usePayroll } from './hooks/use-payroll';
+import { PayrollTable } from './components/payroll-table';
 import { columns } from './components/columns';
 import { PayModal } from './components/pay-modal';
 import { PayrollDate } from './components/payroll-date';
@@ -18,22 +18,20 @@ export default function Payroll() {
 
 	return (
 		<Layout>
-			<>
-				<PayrollDate
-					handleStart={setPayrollStart}
-					handleEnd={setPayrollEnd}
-				/>
+			<PayrollDate
+				handleStart={setPayrollStart}
+				handleEnd={setPayrollEnd}
+			/>
 
-				<DataTable
-					columns={memoizedColumns}
-					data={payrollList}
-					loading={loading}
-				/>
-				<PayModal
-					employeeData={selectedRow}
-					onClose={() => setSelectedRow(null)}
-				/>
-			</>
+			<PayrollTable
+				columns={memoizedColumns}
+				data={payrollList}
+				loading={loading}
+			/>
+			<PayModal
+				employeeData={selectedRow}
+				onClose={() => setSelectedRow(null)}
+			/>
 		</Layout>
 	);
 }

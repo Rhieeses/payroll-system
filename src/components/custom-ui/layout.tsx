@@ -3,8 +3,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import LogoutButton from './logout-button';
 
-const Layout = ({ children }: { children: React.ReactElement }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
 	const pathname = usePathname();
 
 	const pageTitle = pathname.split('/').slice(0, 2).join(' ');
@@ -109,19 +110,6 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 						<p className='label text-xs mb-[0.2rem]'>TEAM MANAGEMENT</p>
 						<ul className='flex flex-col gap-2 '>
 							<Link
-								href='/performance'
-								className={`p-[0.5rem] rounded-lg  ${
-									pathname === '/performance'
-										? 'bg-black/10 text-slate-900'
-										: 'cursor-pointer hover:bg-gray-200 duration-200'
-								}`}>
-								<li className='flex gap-2 w-full'>
-									<i className='bx bx-line-chart bx-sm' />
-									<p>Performance</p>
-								</li>
-							</Link>
-
-							<Link
 								href='/invoices'
 								className={`p-[0.5rem] rounded-lg  ${
 									pathname === '/invoices'
@@ -134,18 +122,6 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								</li>
 							</Link>
 
-							<Link
-								href='/calendar'
-								className={`p-[0.5rem] rounded-lg  ${
-									pathname === '/calendar'
-										? 'bg-black/10 text-slate-900'
-										: 'cursor-pointer hover:bg-gray-200 duration-200'
-								}`}>
-								<li className='flex gap-2 w-full'>
-									<i className='bx bx-calendar bx-sm' />
-									<p>Calendar</p>
-								</li>
-							</Link>
 							<Link
 								href='/settings'
 								className={`p-[0.5rem] rounded-lg  ${
@@ -189,6 +165,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
 								<i className='bx bx-user-plus bx-sm'></i>
 								Invite
 							</Button>
+							<LogoutButton />
 						</div>
 					</div>
 					<div className='body p-5 space-y-5'>{children}</div>

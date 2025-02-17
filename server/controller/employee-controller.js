@@ -38,6 +38,8 @@ const EmployeeDetails = async (req, res) => {
 	try {
 		verifyToken(token, ['Admin', 'User']);
 		const employeeDetails = await employeeModel.fetchEmployeeDetails(id);
+
+		console.log(employeeDetails);
 		res.json(employeeDetails);
 	} catch (error) {
 		res.status(500).json({ error: 'Error fetching employee details' });
@@ -61,4 +63,34 @@ const EmployeeChoices = async (req, res) => {
 	}
 };
 
-module.exports = { AddEmployee, EmployeeList, EmployeeDetails, EmployeeChoices };
+const EmployeeTerminate = async (req, res) => {
+	const token = req.cookies.token;
+	const { id } = req.params;
+
+	if (!token) {
+		return res.status(401).json({ message: 'Unauthorized, You must login first!' });
+	}
+
+	try {
+		verifyToken(token, ['Admin']);
+
+		const result = await employeeModel.terminateEmployee(id);
+
+		if (result.success) {
+			return res.status(200).json({
+				success: true,
+				message: result.message || 'Employee deleted successfully.',
+			});
+		} else {
+			return res.status(404).json({
+				success: false,
+				message: result.message || 'No employee found with the given ID.',
+			});
+		}
+	} catch (error) {
+		console.error('Error terminating employee:', error);
+		res.status(500).json({ success: false, error: 'Error terminating employee.' });
+	}
+};
+
+module.exports = { AddEmployee, EmployeeList, EmployeeDetails, EmployeeChoices, EmployeeTerminate };

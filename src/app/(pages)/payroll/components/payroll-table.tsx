@@ -36,7 +36,7 @@ interface DataTableProps<TData, TValue> {
 	loading: boolean;
 }
 
-export function DataTable<TData extends { employee_name: string }, TValue>({
+export function PayrollTable<TData extends { employee_name: string }, TValue>({
 	columns,
 	data,
 	loading,
